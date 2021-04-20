@@ -1,0 +1,74 @@
+---
+title: "Übungsaufgaben R-Tutorium"
+date: "Sommersemester 2021"
+output:
+  rmarkdown::html_document:
+    theme: cosmo
+    number_sections: true
+  pdf_document: 
+    number_sections: true
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(
+  echo = TRUE, fig.align = "center", out.width = '50%', 
+  warning = FALSE, message = FALSE)
+```
+
+# Grundlagen
+
+TBA
+
+# R-Markdown
+
+TBA
+
+# Datenaufbereitung
+
+TBA
+
+# Visualisierung
+
+TBA
+
+# Formalia
+
+TBA
+
+# Regressionsanalyse I
+
+TBA
+
+# Monte-Carlo-Simulationen
+
+## Der Zentrale Grenzwertsatz
+
+Illustrieren Sie die Funktion des zentralen Grenzwertsatzes mit Hilfe einer
+MCS am Beispiel des Mittelwerts einer Uniformverteilung.
+
+## Das Gesetz der großen Zahl
+
+Illustrieren Sie das Gesetz der großen Zahl indem Sie aus einer Normalverteilung
+Stichproben unterschiedlicher Größe ziehen und deren Varianz und Mittelwert
+abbilden.
+
+## OLS und nicht-normalverteilte Fehler
+
+Sie haben in der Vorlesung gelernt, dass die Normalverteilung der 
+Fehlerterme häufig als optionale Annahme im OLS-Framework verwenet wird.
+Untersuchen Sie die Implikationen von nicht-normalverteilten Fehlertermen
+auf die Verteilung des OLS-Schätzers für unterschiedliche Stichprobengrößen
+mit Hilfe einer MCS und interpretieren Sie die Ergebnisse.
+Beziehen Sie sich der Einfachheit halber auf ein univariates Regressionsmodell.
+Um nicht-normalverteilte Fehlerterme zu generieren ziehen Sie Zufallszahlen aus
+der $\chi^2$-Verteilung mit einem Freiheitsgrad und normalisieren Sie die 
+Fehler, sodass sie einen Mittelwert von $0$ aufweisen (Sie können die
+Funktion `scale()` verwenden).
+
+# Regressionsanalyse II
+
+TBA
+
+# Regressionsanalyse III
+
+TBA

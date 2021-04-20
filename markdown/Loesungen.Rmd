@@ -1,0 +1,261 @@
+---
+title: "Übungsaufgaben R-Tutorium - Lösungen"
+date: "Sommersemester 2021"
+output:
+  rmarkdown::html_document:
+    theme: cosmo
+    number_sections: true
+  pdf_document: 
+    number_sections: true
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(
+  echo = TRUE, fig.align = "center", out.width = '50%', 
+  warning = FALSE, message = FALSE)
+```
+
+# Grundlagen
+
+TBA
+
+# R-Markdown
+
+TBA
+
+# Datenaufbereitung
+
+TBA
+
+# Visualisierung
+
+TBA
+
+# Formalia
+
+TBA
+
+# Regressionsanalyse I
+
+TBA
+
+# Monte-Carlo-Simulationen
+
+## Der Zentrale Grenzwertsatz
+
+```{r}
+require(tidyverse)
+require(ggpubr)
+require(icaeDesign)
+```
+
+
+```{r}
+set.seed(123)
+n_samples <- c(5, 10, 50, 500, 1000, 5000)
+sample_means <- list()
+mean_plots <- list()
+for (i in seq_along(n_samples)){
+  sample_means[[paste0("n_", n_samples[i])]] <- tibble(
+    means = purrr::map_dbl(
+      .x = 1:n_samples[i], .f = ~mean(runif(n = 20)))
+    )
+  mean_plots[[paste0("n_", n_samples[i])]] <- ggplot(
+    data = sample_means[[paste0("n_", n_samples[i])]],
+    mapping = aes(x=means)
+  ) +
+    labs(title = paste0("Stichprobe: ", n_samples[i])) +
+    geom_density() + theme_icae()
+}
+```
+
+Beachten Sie die Verwendung der Funktion `purrr::map_dbl()`, mit der wir
+das gleiche wie mit einem einfachen `for`-Loop erreichen können. Sie führt
+die Funktion nach dem Argument `.f` so oft aus wie der Vektor beim Argument
+`.x` lang ist und gibt die Ergebnisse als Vektor aus. Für mehr Infos siehe 
+z.B. [hier](https://r4ds.had.co.nz/iteration.html#the-map-functions).
+
+```{r}
+ggpubr::ggarrange(plotlist = mean_plots)
+```
+
+## Das Gesetz der großen Zahl
+
+```{r}
+require(tidyverse)
+require(ggpubr)
+require(icaeDesign)
+```
+
+```{r}
+set.seed(1)
+samples <- 20
+nb_samples <- 500
+sample_sizes <- seq(10, 10000, length.out = samples)
+sample_means <- rep(NA, samples)
+sample_vars <- rep(NA, samples)
+for (i in 1:samples){
+  sample_size <- sample_sizes[i]
+  
+  samples_used <- purrr::map_dbl(.x = 1:nb_samples, .f = ~mean(
+    rnorm(n = sample_size, mean = 0, sd = 2))
+    )
+  sample_means[i] <- mean(samples_used)
+  sample_vars[i] <- sd(samples_used)
+}
+
+mean_plot <- ggplot(
+  tibble(sample_sizes, sample_means), aes(x=sample_sizes, y=sample_means)
+  ) +
+  geom_line() + geom_hline(yintercept = 0) +
+  ggtitle("Mean sample means") +
+  theme_icae()
+
+var_plot <- ggplot(
+  tibble(sample_sizes, sample_vars), aes(x=sample_sizes, y=sample_vars)
+  ) +
+  ggtitle("Variance of sample means") +
+  geom_line() + 
+  theme_icae()
+
+ggpubr::ggarrange(mean_plot, var_plot)
+```
+
+
+## OLS und nicht-normalverteilte Fehler
+
+```{r}
+require(tidyverse)
+require(data.table)
+require(knitr)
+require(icaeDesign)
+```
+
+
+Spezifikation der Parameter:
+
+```{r}
+set.seed(123)
+mcs_runs <- 1000
+beta_0 <- 1
+beta_1 <- 3
+stichproben_n <- c(10, 20, 50, 100)
+```
+
+Definition einer Funktion, welche die MCS für eine gegebene Stichprobengröße
+ausführt:
+
+```{r}
+do_mcs <- function(stichprobengroesse, mcs_runs){
+  # Erstellen der deterministischen Variablen:
+  x_var <- runif(stichprobengroesse)
+  y_determ <- beta_0 + beta_1*x_var
+  data_det <- tibble("x"=x_var, "y_det"=y_determ)
+  beta_1hat_norm <- rep(NA, mcs_runs)
+  beta_1se_norm <- rep(NA, mcs_runs)
+  beta_1hat_chi <- rep(NA, mcs_runs)
+  beta_1se_chi <- rep(NA, mcs_runs)
+  for (i in 1:mcs_runs){
+    # Ziehung der Fehlerterme und Berechnung der Stichprobe
+    normal_errors <- scale(rnorm(n = stichprobengroesse))
+    nonnormal_errors <- scale(rchisq(n = stichprobengroesse, df = 1))
+    sample_obtained <- data_det %>%
+      dplyr::mutate(
+        y_norm = y_det + normal_errors,
+        y_chi = y_det + nonnormal_errors[,1]
+      )
+  
+    # Schätzung des Modells
+    linreg_norm <- summary(lm(y_norm~x, data = sample_obtained))
+    beta_1hat_norm[i] <- coef(linreg_norm)[2]
+    beta_1se_norm[i] <- coef(linreg_norm)[4]
+    
+    linreg_chi <- summary(lm(y_chi~x, data = sample_obtained))
+    beta_1hat_chi[i] <- coef(linreg_chi)[2]
+    beta_1se_chi[i] <- coef(linreg_chi)[4]
+  }
+  tibble(
+    "n" = rep(stichprobengroesse, mcs_runs), 
+    "beta_1hat_norm" = beta_1hat_norm,
+    "beta_1se_norm" = beta_1se_norm,
+    "beta_1hat_chi" = beta_1hat_chi,
+    "beta_1se_chi" = beta_1se_chi
+  )
+}
+
+```
+
+Simulation für verschiedene Stichprobengrößen:
+
+```{r}
+mcs_results <- list()
+for (i in seq_along(stichproben_n)){
+  mcs_results[[i]] <- do_mcs(
+    stichprobengroesse = stichproben_n[i], mcs_runs = mcs_runs)
+}
+mcs_results_full <- data.table::rbindlist(mcs_results)
+```
+
+Visualisierung der Ergebnisse:
+
+```{r}
+mcs_results_full %>%
+  select(all_of(c("beta_1hat_norm", "beta_1hat_chi", "n"))) %>%
+  pivot_longer(
+    cols = all_of(c("beta_1hat_norm", "beta_1hat_chi")), 
+    names_to = "vars", values_to = "values") %>%
+  dplyr::mutate(stichprobe=factor(n)) %>%
+  ggplot(data = ., aes_string(x="values", color="vars", fill="vars")) +
+  geom_density(alpha=0.5) +
+  scale_color_viridis_d(aesthetics = c("color", "fill")) +
+  facet_wrap(~stichprobe) +
+  theme_icae()
+```
+
+```{r}
+mcs_results_full %>%
+  select(all_of(c("beta_1se_chi",  "beta_1se_norm", "n"))) %>%
+  pivot_longer(
+    cols = all_of(c("beta_1se_norm", "beta_1se_chi")), 
+    names_to = "vars", values_to = "values") %>%
+  dplyr::mutate(stichprobe=factor(n)) %>%
+  ggplot(data = ., aes_string(x="values", color="vars", fill="vars")) +
+  geom_density(alpha=0.5) +
+  scale_color_viridis_d(aesthetics = c("color", "fill")) +
+  facet_wrap(~stichprobe) +
+  theme_icae()
+```
+          
+Zusammenfassende Statistiken:
+
+```{r}
+mcs_results_full %>%
+  dplyr::mutate(
+    sq_errors_normal = (beta_1hat_norm - beta_1)**2,
+    sq_errors_chi = (beta_1hat_chi - beta_1)**2
+  ) %>%
+  group_by(n) %>%
+  summarise(
+    mean_beta1_hat_norm=mean(beta_1hat_norm),
+    mean_beta1_hat_chi=mean(beta_1hat_chi),
+    mean_se_norm = mean(beta_1se_norm),
+    mean_se_chi = mean(beta_1se_chi),
+    mse_beta1_norm=mean(sq_errors_normal),
+    mse_beta_1_chi=mean(sq_errors_chi)
+  ) %>%
+  knitr::kable(
+    digits = 3, 
+    col.names = c("n", "B1 (norm)", "B1 (chi)", "SE (norm)",
+                  "SE (chi)", "MSE (norm)", "MSE (chi)"))
+```
+
+Insgesamt sind also bereits bei sehr kleinen Stichproben kaum 
+Performance-Unterschiede zu erkennen.
+
+# Regressionsanalyse II
+
+TBA
+
+# Regressionsanalyse III
+
+TBA
