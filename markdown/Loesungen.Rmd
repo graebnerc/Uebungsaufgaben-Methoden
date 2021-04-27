@@ -17,7 +17,78 @@ knitr::opts_chunk$set(
 
 # Grundlagen
 
-TBA
+## Grundrechenarten
+
+$$10+25$$
+
+```{r}
+10 + 25
+```
+
+$$50\cdot 2$$
+
+```{r}
+50 * 2
+```
+
+$$\frac{27}{4}$$
+
+```{r}
+27 / 4
+```
+
+$$500-650$$
+
+```{r}
+500 - 650
+```
+
+$$2^4$$
+
+```{r}
+2^4 # Alternativ: 2**4
+```
+
+$$\sqrt{3}\cdot 60$$
+
+```{r}
+sqrt(3) * 60
+```
+
+$$50 \cdot (4+2)^3$$
+
+```{r}
+50 * (4 + 2)^3
+```
+
+## Rechnungen mit Zwischenschritten
+
+```{r}
+a_  <- 10 + 25
+b_  <- a_ * 40
+c_ <- b_ - 100
+d_ <- c_ * 3
+e_ <- sqrt(d_)
+f_ <- e_ / 1000
+g_ <- f_^3
+print(g_)
+```
+
+
+*Hinweis*: Um zu vermeiden, dass originäre `R`-Befehlte wie `c` überschrieben
+werden, wurden in der Lösung den Buchstaben immer ein `_` als 
+Variablenname angefügt
+Bevor man einen Variablennamen vergibt, sollte man immer durch Eingabe in der
+Konsole überprüfen, ob dieser Name bereits vergeben ist.
+Bei `c` würde hätte man dann unmittelbar gemerkt, dass es sich hier bereits
+um eine Funktion handelt:
+
+```{r}
+c
+```
+
+Man bekommt zwar keine Fehlermeldungen, wenn solche internen Funktionen
+überschrieben werden, das sollte aber unbedingt vermieden werden.
 
 # R-Markdown
 

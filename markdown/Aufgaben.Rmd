@@ -17,11 +17,44 @@ knitr::opts_chunk$set(
 
 # Grundlagen
 
-TBA
+## Grundrechenarten
+
+Führen Sie die folgenden Rechnungen aus:
+
+$$10+25$$
+$$50\cdot 2$$
+
+$$\frac{27}{4}$$
+$$500-650$$
+
+$$2^4$$
+
+$$\sqrt{3}\cdot 60$$
+
+$$50 \cdot (4+2)^3$$
+
+## Rechnungen mit Zwischenschritten
+
+Führen Sie die folgende Rechnung aus. Speichern Sie dabei die Zwischenergebnisse
+immer explizit ab und verwenden Sie sie für den nächsten Schritt weiter.
+Geben sie am Ende das Gesamtergebnis aus.
+
+\begin{align*}
+a &= 10 + 25\\
+b &= a \cdot 40\\
+c &= b - 100\\
+d &= c \cdot 3\\
+e &= \sqrt{d}\\
+f &= \frac{e}{1000}\\
+g &= f^3
+\end{align*}
+
+*Vorsicht:* Überschreiben Sie keine `R`-spezifischen Befehle, wie z.B. `c`!
 
 # R-Markdown
 
-TBA
+Erstellen Sie einen leeren Chunk, in dem Sie einen Kommentar einfügen.
+
 
 # Datenaufbereitung
 

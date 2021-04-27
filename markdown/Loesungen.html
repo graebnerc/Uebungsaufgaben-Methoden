@@ -195,7 +195,46 @@ summary {
 
 <div id="grundlagen" class="section level1" number="1">
 <h1 number="1"><span class="header-section-number">1</span> Grundlagen</h1>
-<p>TBA</p>
+<div id="grundrechenarten" class="section level2" number="1.1">
+<h2 number="1.1"><span class="header-section-number">1.1</span> Grundrechenarten</h2>
+<p><span class="math display">\[10+25\]</span></p>
+<pre class="r"><code>10 + 25</code></pre>
+<pre><code>## [1] 35</code></pre>
+<p><span class="math display">\[50\cdot 2\]</span></p>
+<pre class="r"><code>50 * 2</code></pre>
+<pre><code>## [1] 100</code></pre>
+<p><span class="math display">\[\frac{27}{4}\]</span></p>
+<pre class="r"><code>27 / 4</code></pre>
+<pre><code>## [1] 6.75</code></pre>
+<p><span class="math display">\[500-650\]</span></p>
+<pre class="r"><code>500 - 650</code></pre>
+<pre><code>## [1] -150</code></pre>
+<p><span class="math display">\[2^4\]</span></p>
+<pre class="r"><code>2^4 # Alternativ: 2**4</code></pre>
+<pre><code>## [1] 16</code></pre>
+<p><span class="math display">\[\sqrt{3}\cdot 60\]</span></p>
+<pre class="r"><code>sqrt(3) * 60</code></pre>
+<pre><code>## [1] 103.923</code></pre>
+<p><span class="math display">\[50 \cdot (4+2)^3\]</span></p>
+<pre class="r"><code>50 * (4 + 2)^3</code></pre>
+<pre><code>## [1] 10800</code></pre>
+</div>
+<div id="rechnungen-mit-zwischenschritten" class="section level2" number="1.2">
+<h2 number="1.2"><span class="header-section-number">1.2</span> Rechnungen mit Zwischenschritten</h2>
+<pre class="r"><code>a_  &lt;- 10 + 25
+b_  &lt;- a_ * 40
+c_ &lt;- b_ - 100
+d_ &lt;- c_ * 3
+e_ &lt;- sqrt(d_)
+f_ &lt;- e_ / 1000
+g_ &lt;- f_^3
+print(g_)</code></pre>
+<pre><code>## [1] 0.0002435549</code></pre>
+<p><em>Hinweis</em>: Um zu vermeiden, dass originäre <code>R</code>-Befehlte wie <code>c</code> überschrieben werden, wurden in der Lösung den Buchstaben immer ein <code>_</code> als Variablenname angefügt Bevor man einen Variablennamen vergibt, sollte man immer durch Eingabe in der Konsole überprüfen, ob dieser Name bereits vergeben ist. Bei <code>c</code> würde hätte man dann unmittelbar gemerkt, dass es sich hier bereits um eine Funktion handelt:</p>
+<pre class="r"><code>c</code></pre>
+<pre><code>## function (...)  .Primitive(&quot;c&quot;)</code></pre>
+<p>Man bekommt zwar keine Fehlermeldungen, wenn solche internen Funktionen überschrieben werden, das sollte aber unbedingt vermieden werden.</p>
+</div>
 </div>
 <div id="r-markdown" class="section level1" number="2">
 <h1 number="2"><span class="header-section-number">2</span> R-Markdown</h1>
