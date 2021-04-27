@@ -13,6 +13,7 @@ Arten gelöst werden.
 Diese Github-Repository wird laufend geupdated. Sie können sich einen 
 Überblick über die Änderungen verschaffen, indem Sie auf den Button
 `Commits` klicken (rechts oben, direkt unter dem großen Botton `Code`).
+Wichtige Änderungen werden zudem als `Release` (siehe rechts) gekennzeichnet.
 Um sich die gesamte Repository herunterzuladen klicken Sie auf `Code` und
 dann auf `Download ZIP`.
 
