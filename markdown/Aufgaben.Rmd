@@ -51,6 +51,51 @@ g &= f^3
 
 *Vorsicht:* Überschreiben Sie keine `R`-spezifischen Befehle, wie z.B. `c`!
 
+## Vektorentypen und Dataframes
+
+### Tests auf Datentypen
+
+Wenden Sie einen geeigneten Test an, um den Typ der atomaren Vektoren `100` und 
+`"Tutorium"` angeben zu können.
+
+Testen Sie explizit ob es sich bei den atomaren Vektoren um ein Objekt vom Typ
+`double`, bzw. `character` handelt.
+
+### Transformation von Datentypen
+
+In dem folgenden Chunk wird eine Zahl als `character` abgespeichert. Ergänze 
+den Code, sodass der atomare Vektor wieder als `double` gespeichert wird.
+Überprüfe dann mit einem Test, ob die Transformation erfolgreich war und 
+multipliziere das Ergebnis mit `2`.
+
+```{r}
+at_vec <- "2"
+```
+
+
+### Listen und DataFrames
+
+Erstelle eine Liste mit drei Elemnten, in denen jeweils die Zahlen von
+`50 - 55`, `60 - 65` und `70 - 75` angegeben werden. Transformiere
+die Liste dann in einen Dataframe.
+
+### Manuelle Konstruktion eines DataFrames
+
+Für diese Aufgabe sollst du eigenständig einen Data Frame erstellen. In diesem
+soll für die Bundesländer `Berlin`, `Hamburg` und `Bremen` die Fläche in 
+Quadratkilometer angegeben werden. Für `Berlin` sind dies ungefähr `892`,
+für `Hamburg` ungefähr `755` und für `Bremen` ungefähr `419`.
+Welchen Typ haben die atomaren Vektoren in den Spalten?
+
+Wiederhole das Erstellen des DataFrames, aber erstelle diesmal einen 
+`tibble`.
+
+### DataFrames und Listen (optional)
+
+Welchen Typ hat ein DataFrame? Welchen Typ hat ein `tibble`? 
+Welchen Typ hat eine Liste? Was sagt uns das
+über die zugrundeliegende Objektstruktur in `R`?
+
 # R-Markdown
 
 Erstellen Sie einen leeren Chunk, in dem Sie einen Kommentar einfügen.

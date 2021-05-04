@@ -235,6 +235,124 @@ print(g_)</code></pre>
 <pre><code>## function (...)  .Primitive(&quot;c&quot;)</code></pre>
 <p>Man bekommt zwar keine Fehlermeldungen, wenn solche internen Funktionen überschrieben werden, das sollte aber unbedingt vermieden werden.</p>
 </div>
+<div id="vektorentypen-und-dataframes" class="section level2" number="1.3">
+<h2 number="1.3"><span class="header-section-number">1.3</span> Vektorentypen und Dataframes</h2>
+<div id="tests-auf-datentypen" class="section level3" number="1.3.1">
+<h3 number="1.3.1"><span class="header-section-number">1.3.1</span> Tests auf Datentypen</h3>
+<pre class="r"><code>typeof(100)</code></pre>
+<pre><code>## [1] &quot;double&quot;</code></pre>
+<pre class="r"><code>typeof(&quot;Tutorium&quot;)</code></pre>
+<pre><code>## [1] &quot;character&quot;</code></pre>
+<pre class="r"><code>is.double(100)</code></pre>
+<pre><code>## [1] TRUE</code></pre>
+<pre class="r"><code>is.character(100)</code></pre>
+<pre><code>## [1] FALSE</code></pre>
+<pre class="r"><code>is.double(&quot;Tutorium&quot;)</code></pre>
+<pre><code>## [1] FALSE</code></pre>
+<pre class="r"><code>is.character(&quot;Tutorium&quot;)</code></pre>
+<pre><code>## [1] TRUE</code></pre>
+</div>
+<div id="transformation-von-datentypen" class="section level3" number="1.3.2">
+<h3 number="1.3.2"><span class="header-section-number">1.3.2</span> Transformation von Datentypen</h3>
+<pre class="r"><code>at_vec &lt;- &quot;2&quot;
+at_vec_double &lt;- as.double(at_vec)
+is.double(at_vec_double)</code></pre>
+<pre><code>## [1] TRUE</code></pre>
+<pre class="r"><code>at_vec_double * 2</code></pre>
+<pre><code>## [1] 4</code></pre>
+</div>
+<div id="listen-und-dataframes" class="section level3" number="1.3.3">
+<h3 number="1.3.3"><span class="header-section-number">1.3.3</span> Listen und DataFrames</h3>
+<pre class="r"><code>Liste_1 &lt;- list(
+  &quot;a&quot; = 50:55,
+  &quot;b&quot; = 60:65,
+  &quot;c&quot; = 70:75
+)
+Liste_1</code></pre>
+<pre><code>## $a
+## [1] 50 51 52 53 54 55
+## 
+## $b
+## [1] 60 61 62 63 64 65
+## 
+## $c
+## [1] 70 71 72 73 74 75</code></pre>
+<pre class="r"><code>Data_Frame_1 &lt;- as.data.frame(Liste_1)
+Data_Frame_1</code></pre>
+<pre><code>##    a  b  c
+## 1 50 60 70
+## 2 51 61 71
+## 3 52 62 72
+## 4 53 63 73
+## 5 54 64 74
+## 6 55 65 75</code></pre>
+</div>
+<div id="manuelle-konstruktion-eines-dataframes" class="section level3" number="1.3.4">
+<h3 number="1.3.4"><span class="header-section-number">1.3.4</span> Manuelle Konstruktion eines DataFrames</h3>
+<pre class="r"><code>Bundeslaender &lt;- data.frame(
+  &quot;Bundesland&quot; = c(&quot;Berlin&quot;, &quot;Hamburg&quot;, &quot;Bremen&quot;),
+  &quot;Flaeche&quot; = c(892, 755, 419)
+)
+Bundeslaender</code></pre>
+<pre><code>##   Bundesland Flaeche
+## 1     Berlin     892
+## 2    Hamburg     755
+## 3     Bremen     419</code></pre>
+<pre class="r"><code>str(Bundeslaender)</code></pre>
+<pre><code>## &#39;data.frame&#39;:    3 obs. of  2 variables:
+##  $ Bundesland: chr  &quot;Berlin&quot; &quot;Hamburg&quot; &quot;Bremen&quot;
+##  $ Flaeche   : num  892 755 419</code></pre>
+<p>Oder:</p>
+<pre class="r"><code>typeof(Bundeslaender$Bundesland)</code></pre>
+<pre><code>## [1] &quot;character&quot;</code></pre>
+<pre class="r"><code>typeof(Bundeslaender$Flaeche)</code></pre>
+<pre><code>## [1] &quot;double&quot;</code></pre>
+<p>Erstellen eines <code>tibble</code>:</p>
+<pre class="r"><code>require(tibble)
+Bundeslaender &lt;- tibble::tibble(
+  &quot;Bundesland&quot; = c(&quot;Berlin&quot;, &quot;Hamburg&quot;, &quot;Bremen&quot;),
+  &quot;Flaeche&quot; = c(892, 755, 419)
+)
+Bundeslaender</code></pre>
+<pre><code>## # A tibble: 3 x 2
+##   Bundesland Flaeche
+##   &lt;chr&gt;        &lt;dbl&gt;
+## 1 Berlin         892
+## 2 Hamburg        755
+## 3 Bremen         419</code></pre>
+</div>
+<div id="dataframes-und-listen-optional" class="section level3" number="1.3.5">
+<h3 number="1.3.5"><span class="header-section-number">1.3.5</span> DataFrames und Listen (optional)</h3>
+<p>Welchen Typ hat ein DataFrame? Welchen Typ hat ein <code>tibble</code>? Welchen Typ hat eine Liste? Was sagt uns das über die zugrundeliegende Objektstruktur in <code>R</code>?</p>
+<pre class="r"><code>require(tibble)
+list_expl &lt;- list(&quot;a&quot;=1:3, &quot;b&quot;=4:6)
+data_frame_expl &lt;- as.data.frame(list_expl)
+tibble_expl &lt;- tibble::as_tibble(list_expl)</code></pre>
+<pre class="r"><code>typeof(list_expl)</code></pre>
+<pre><code>## [1] &quot;list&quot;</code></pre>
+<pre class="r"><code>typeof(data_frame_expl)</code></pre>
+<pre><code>## [1] &quot;list&quot;</code></pre>
+<pre class="r"><code>typeof(tibble_expl)</code></pre>
+<pre><code>## [1] &quot;list&quot;</code></pre>
+<p>Bei allen drei Objekten handelt es sich um Listen! Das liegt daran, dass es sich beim DataFrame und beim Tibble nicht um ‘genuine’ Typen handelt, sondern um so genannte S3-Klassen, welche die ‘genuinen’ Typen wie <code>list</code> mit bestimmten Features modifiziert. Das erkennen wir über Anwendung der Funktion <code>class()</code>:</p>
+<pre class="r"><code>class(list_expl)</code></pre>
+<pre><code>## [1] &quot;list&quot;</code></pre>
+<pre class="r"><code>class(data_frame_expl)</code></pre>
+<pre><code>## [1] &quot;data.frame&quot;</code></pre>
+<pre class="r"><code>class(tibble_expl)</code></pre>
+<pre><code>## [1] &quot;tbl_df&quot;     &quot;tbl&quot;        &quot;data.frame&quot;</code></pre>
+<pre class="r"><code>is.data.frame(tibble_expl)</code></pre>
+<pre><code>## [1] TRUE</code></pre>
+<pre class="r"><code>is.data.frame(data_frame_expl)</code></pre>
+<pre><code>## [1] TRUE</code></pre>
+<p>Aber:</p>
+<pre class="r"><code>tibble::is_tibble(data_frame_expl)</code></pre>
+<pre><code>## [1] FALSE</code></pre>
+<pre class="r"><code>tibble::is_tibble(tibble_expl)</code></pre>
+<pre><code>## [1] TRUE</code></pre>
+<p>Das hat mit der objektorientierten Struktur von R zu tun. Es ist in der Praxis nur relevant wenn wir Operationen durchführen, die für unterschiedliche Klassen unterschiedlich funktionieren. Das werden wir später z.B. bei der Funktion <code>summary()</code> noch merken. Es ist aber in der Praxis zu Beginn weniger relevant. Mehr Details gibt es im Skript und <a href="https://adv-r.hadley.nz/vectors-chap.html#s3-atomic-vectors">hier</a>.</p>
+</div>
+</div>
 </div>
 <div id="r-markdown" class="section level1" number="2">
 <h1 number="2"><span class="header-section-number">2</span> R-Markdown</h1>

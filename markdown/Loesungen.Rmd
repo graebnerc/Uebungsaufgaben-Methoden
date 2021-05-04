@@ -90,6 +90,153 @@ c
 Man bekommt zwar keine Fehlermeldungen, wenn solche internen Funktionen
 überschrieben werden, das sollte aber unbedingt vermieden werden.
 
+## Vektorentypen und Dataframes
+
+### Tests auf Datentypen
+
+```{r}
+typeof(100)
+typeof("Tutorium")
+is.double(100)
+is.character(100)
+is.double("Tutorium")
+is.character("Tutorium")
+```
+
+### Transformation von Datentypen
+
+```{r}
+at_vec <- "2"
+at_vec_double <- as.double(at_vec)
+is.double(at_vec_double)
+```
+
+```{r}
+at_vec_double * 2
+```
+
+
+### Listen und DataFrames
+
+```{r}
+Liste_1 <- list(
+  "a" = 50:55,
+  "b" = 60:65,
+  "c" = 70:75
+)
+Liste_1
+```
+
+```{r}
+Data_Frame_1 <- as.data.frame(Liste_1)
+Data_Frame_1
+```
+
+### Manuelle Konstruktion eines DataFrames
+
+```{r}
+Bundeslaender <- data.frame(
+  "Bundesland" = c("Berlin", "Hamburg", "Bremen"),
+  "Flaeche" = c(892, 755, 419)
+)
+Bundeslaender
+```
+
+```{r}
+str(Bundeslaender)
+```
+
+Oder:
+
+```{r}
+typeof(Bundeslaender$Bundesland)
+```
+
+```{r}
+typeof(Bundeslaender$Flaeche)
+```
+
+Erstellen eines `tibble`:
+
+```{r}
+require(tibble)
+Bundeslaender <- tibble::tibble(
+  "Bundesland" = c("Berlin", "Hamburg", "Bremen"),
+  "Flaeche" = c(892, 755, 419)
+)
+Bundeslaender
+```
+
+
+### DataFrames und Listen (optional)
+
+Welchen Typ hat ein DataFrame? Welchen Typ hat ein `tibble`? 
+Welchen Typ hat eine Liste? Was sagt uns das
+über die zugrundeliegende Objektstruktur in `R`?
+
+```{r}
+require(tibble)
+list_expl <- list("a"=1:3, "b"=4:6)
+data_frame_expl <- as.data.frame(list_expl)
+tibble_expl <- tibble::as_tibble(list_expl)
+```
+
+```{r}
+typeof(list_expl)
+```
+
+```{r}
+typeof(data_frame_expl)
+```
+
+```{r}
+typeof(tibble_expl)
+```
+
+Bei allen drei Objekten handelt es sich um Listen!
+Das liegt daran, dass es sich beim DataFrame und beim Tibble nicht um 'genuine'
+Typen handelt, sondern um so genannte S3-Klassen, welche die 'genuinen' 
+Typen wie `list` mit bestimmten Features modifiziert. Das erkennen wir über 
+Anwendung der Funktion
+`class()`:
+
+```{r}
+class(list_expl)
+```
+
+```{r}
+class(data_frame_expl)
+```
+
+```{r}
+class(tibble_expl)
+```
+
+```{r}
+is.data.frame(tibble_expl)
+```
+
+```{r}
+is.data.frame(data_frame_expl)
+```
+
+Aber:
+
+```{r}
+tibble::is_tibble(data_frame_expl)
+```
+
+```{r}
+tibble::is_tibble(tibble_expl)
+```
+
+Das hat mit der objektorientierten Struktur von R zu tun. Es ist in der Praxis
+nur relevant wenn wir Operationen durchführen, die für unterschiedliche Klassen
+unterschiedlich funktionieren. Das werden wir später z.B. bei der Funktion
+`summary()` noch merken. Es ist aber in der Praxis zu Beginn weniger relevant.
+Mehr Details gibt es im Skript und 
+[hier](https://adv-r.hadley.nz/vectors-chap.html#s3-atomic-vectors).
+
 # R-Markdown
 
 TBA
