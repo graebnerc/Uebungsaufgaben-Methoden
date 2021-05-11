@@ -360,7 +360,130 @@ tibble_expl &lt;- tibble::as_tibble(list_expl)</code></pre>
 </div>
 <div id="datenaufbereitung" class="section level1" number="3">
 <h1 number="3"><span class="header-section-number">3</span> Datenaufbereitung</h1>
-<p>TBA</p>
+<div id="filtern-und-übersetzen" class="section level2" number="3.1">
+<h2 number="3.1"><span class="header-section-number">3.1</span> Filtern und Übersetzen</h2>
+<p>Verwendete Pakete:</p>
+<pre class="r"><code>require(tidyverse)
+require(here)
+require(data.table)</code></pre>
+<p>Einlesen der Daten:</p>
+<pre class="r"><code>daten_pfad &lt;- here::here(&quot;data/BIP_Konsum.csv&quot;)
+
+daten &lt;- data.table::fread(
+  daten_pfad, colClasses = c(&quot;double&quot;))
+head(daten, 3)</code></pre>
+<pre><code>##    Jahr Konsumausgaben          BIP
+## 1: 1992   1.601342e+12 2.077722e+12
+## 2: 1993   1.611040e+12 2.057856e+12
+## 3: 1994   1.647699e+12 2.108425e+12</code></pre>
+<p>Filtern der Beobachtungen:</p>
+<pre class="r"><code>daten_1997_2015 &lt;- daten %&gt;%
+  dplyr::filter(Jahr &gt; 1997 &amp; Jahr &lt; 2015)</code></pre>
+<p>Übersetzung:</p>
+<pre class="r"><code>daten_uebersetzt &lt;- daten %&gt;%
+  dplyr::rename(
+    Year = Jahr,
+    ConsumerSpending = Konsumausgaben,
+    GDP = BIP
+  )
+head(daten_uebersetzt, 2)</code></pre>
+<pre><code>##    Year ConsumerSpending          GDP
+## 1: 1992     1.601342e+12 2.077722e+12
+## 2: 1993     1.611040e+12 2.057856e+12</code></pre>
+<p>Optionale Alternative bei der die Namen als <code>character</code> kodiert sind (nützlich für die Automatisierung):</p>
+<pre class="r"><code>daten_uebersetzt &lt;- daten %&gt;%
+  dplyr::rename(
+    !!as.name(&quot;Year&quot;) := !!as.name(&quot;Jahr&quot;),
+    !!as.name(&quot;ConsumerSpending&quot;) := !!as.name(&quot;Konsumausgaben&quot;),
+    !!as.name(&quot;GDP&quot;) := !!as.name(&quot;BIP&quot;)
+  )
+head(daten_uebersetzt, 2)</code></pre>
+<pre><code>##    Year ConsumerSpending          GDP
+## 1: 1992     1.601342e+12 2.077722e+12
+## 2: 1993     1.611040e+12 2.057856e+12</code></pre>
+</div>
+<div id="herunterladen-eines-oecd-datensatzes" class="section level2" number="3.2">
+<h2 number="3.2"><span class="header-section-number">3.2</span> Herunterladen eines OECD Datensatzes</h2>
+<p>Geht auf der Website links über den Reiter <code>Finance</code>auf den Tab <code>Central Government Debt</code>. Dort findet ihr eine gleichnamige Tabelle, aus dem ihr die Daten herausziehen könnt Folgende Einstellungen sind dabei notwendig, die ihr oben durch einen Klick auf <code>Customize</code> vornehmen könnt:</p>
+<p>Variable: <code>Total central government debt % of GDP</code> Type: Stocks: <code>Outstanding Amounts</code> Unit: <code>Percantage</code> Frequency: <code>Annual</code> Time Period: <code>2000 - 2010</code> Countries: <code>Alle Länder von Australia bis United States</code></p>
+<p>Dann könnt ihr den Datensatz herunterladen und als <code>csv</code> speichern.</p>
+</div>
+<div id="aufbereitung-des-oecd-datensatzes" class="section level2" number="3.3">
+<h2 number="3.3"><span class="header-section-number">3.3</span> Aufbereitung des OECD Datensatzes</h2>
+<ol style="list-style-type: decimal">
+<li>Einlesen:</li>
+</ol>
+<pre class="r"><code>Debt_Pfad &lt;- here::here(&quot;data/GovDebt.csv&quot;)
+
+Debt &lt;- data.table::fread(Debt_Pfad)
+str(Debt, vec.len = 3)</code></pre>
+<pre><code>## Classes &#39;data.table&#39; and &#39;data.frame&#39;:   370 obs. of  15 variables:
+##  $ COU        : chr  &quot;AUS&quot; &quot;AUS&quot; &quot;AUS&quot; ...
+##  $ Country    : chr  &quot;Australia&quot; &quot;Australia&quot; &quot;Australia&quot; ...
+##  $ DTYP       : chr  &quot;AMT&quot; &quot;AMT&quot; &quot;AMT&quot; ...
+##  $ Type       : chr  &quot;Stocks: Outstanding amounts&quot; &quot;Stocks: Outstanding amounts&quot; &quot;Stocks: Outstanding amounts&quot; ...
+##  $ FREQ       : chr  &quot;A&quot; &quot;A&quot; &quot;A&quot; ...
+##  $ Frequency  : chr  &quot;Annual&quot; &quot;Annual&quot; &quot;Annual&quot; ...
+##  $ UNIT       : chr  &quot;PCT&quot; &quot;PCT&quot; &quot;PCT&quot; ...
+##  $ Unit       : chr  &quot;Percentage&quot; &quot;Percentage&quot; &quot;Percentage&quot; ...
+##  $ DVAR       : chr  &quot;P1&quot; &quot;P1&quot; &quot;P1&quot; ...
+##  $ Variable   : chr  &quot;Total central government debt % of GDP&quot; &quot;Total central government debt % of GDP&quot; &quot;Total central government debt % of GDP&quot; ...
+##  $ TIME       : int  2000 2001 2002 2003 2004 2005 2006 2007 ...
+##  $ Time period: int  2000 2001 2002 2003 2004 2005 2006 2007 ...
+##  $ Value      : num  11.36 9.55 8.58 7.55 ...
+##  $ Flag Codes : logi  NA NA NA NA ...
+##  $ Flags      : logi  NA NA NA NA ...
+##  - attr(*, &quot;.internal.selfref&quot;)=&lt;externalptr&gt;</code></pre>
+<ol start="2" style="list-style-type: decimal">
+<li>Auswahl der Zeilen:</li>
+</ol>
+<pre class="r"><code>Debt_1 &lt;- Debt %&gt;%
+  dplyr::select(Country, TIME, Value)
+
+# Alternativ mit characters
+Debt_1 &lt;- Debt %&gt;%
+  dplyr::select(
+    dplyr::all_of(c(&quot;Country&quot;, &quot;TIME&quot;, &quot;Value&quot;))
+    )
+head(Debt_1, 2)</code></pre>
+<pre><code>##      Country TIME  Value
+## 1: Australia 2000 11.361
+## 2: Australia 2001  9.552</code></pre>
+<ol start="3" style="list-style-type: decimal">
+<li>Filtern nach Deutschland und Zeitraum:</li>
+</ol>
+<pre class="r"><code>Debt_1_Filtered &lt;- Debt_1 %&gt;%
+  dplyr::filter(
+    Country == &quot;Germany&quot;,
+    TIME &gt;= 2005, 
+    TIME &lt;= 2010
+  )
+Debt_1_Filtered</code></pre>
+<pre><code>##    Country TIME  Value
+## 1: Germany 2005 40.832
+## 2: Germany 2006 41.232
+## 3: Germany 2007 39.550
+## 4: Germany 2008 39.550
+## 5: Germany 2009 44.205
+## 6: Germany 2010 44.403</code></pre>
+<p>Oder alle Schritte kombiniert mit Hilfe von <code>%&gt;%</code>:</p>
+<pre class="r"><code>debt_filtered &lt;- data.table::fread(Debt_Pfad) %&gt;%
+  dplyr::select(
+    dplyr::all_of(c(&quot;Country&quot;, &quot;TIME&quot;, &quot;Value&quot;))
+    ) %&gt;%
+  dplyr::filter(
+    Country == &quot;Germany&quot;,
+    TIME &gt;= 2005, 
+    TIME &lt;= 2010
+  )</code></pre>
+<p>In jedem Fall sollte man immer verifizieren, ob die Länder-Jahre-Kombinationen eindeutig sind, z.B. durch:</p>
+<pre class="r"><code>debt_filtered_unique &lt;- debt_filtered %&gt;% 
+  dplyr::distinct(Country, TIME, .keep_all = TRUE)
+nrow(debt_filtered_unique) - nrow(debt_filtered)</code></pre>
+<pre><code>## [1] 0</code></pre>
+<p>Da beide Datensätze die gleiche Anzahl an Zeilen haben, gibt es keine Duplikate. Es gibt verschiedene (und je nach Anwendung effizientere) Methoden um Duplikatore zu finden, aber für die meisten Fälle ist <code>dplyr::distinct()</code> ausreichend.</p>
+<p>Bereitet den gerade heruntergeladenen Datensatz (den ihr ansonsten auch als <code>GovDebtOECD.csv</code> im Ordner <code>data</code> findet) auf indem ihr nur noch die Variablen <code>Country</code>, <code>TIME</code> und <code>Value</code> behaltet und die Daten auf Beobachtungen für Deutschland zwischen 2005 und 2010 beschränkt. Stellt sicher, dass ihr für jede Jahr-Land Kombination tatsächlich nur eine Beobachtung im Datensatz habt.</p>
+</div>
 </div>
 <div id="visualisierung" class="section level1" number="4">
 <h1 number="4"><span class="header-section-number">4</span> Visualisierung</h1>

@@ -247,11 +247,27 @@ g &amp;= f^3
 </div>
 <div id="r-markdown" class="section level1" number="2">
 <h1 number="2"><span class="header-section-number">2</span> R-Markdown</h1>
-<p>Erstellen Sie einen leeren Chunk, in dem Sie einen Kommentar einfügen.</p>
+<p>TBA</p>
 </div>
 <div id="datenaufbereitung" class="section level1" number="3">
 <h1 number="3"><span class="header-section-number">3</span> Datenaufbereitung</h1>
-<p>TBA</p>
+<div id="filtern-und-übersetzen" class="section level2" number="3.1">
+<h2 number="3.1"><span class="header-section-number">3.1</span> Filtern und Übersetzen</h2>
+<p>Ladet bitte den Datensatz <code>ProbSet2_BIP-Konsum_tidy.csv</code> herunter. Führt dann folgende Arbeitsschritte aus:</p>
+<ol style="list-style-type: decimal">
+<li><p>Filtert den Datensatz so, dass er nur noch die zwischen den Jahren 1997 und 2015 erhobenen Beobachtungen enthält.</p></li>
+<li><p>Nehmen wir an, ihr müsstet euren Datensatz für ein englisches Publikum formulieren. Benennt benennt daher die Spalte <code>Jahr</code> in <code>Year</code>, <code>Konsumausgaben</code> in <code>ConsumerSpending</code> und <code>BIP</code> in <code>GDP</code> um.</p></li>
+</ol>
+</div>
+<div id="herunterladen-eines-oecd-datensatzes" class="section level2" number="3.2">
+<h2 number="3.2"><span class="header-section-number">3.2</span> Herunterladen eines OECD-Datensatzes</h2>
+<p>Besorgt euch Informationen über die gesamte Staatsverschuldung (offene Schulden der Zentralregierung) als Prozent des BIP aus der Datanbank der <code>OECD</code>, die ihr über folgende Website erreichen könnt: <a href="https://stats.oecd.org/">https://stats.oecd.org/</a>.</p>
+<p><em>Hinweis:</em> Den resultierenden Datensatz könnt ihr als <code>GovDebt.csv</code> herunterladen. Dieser bildet den Ausgangspunkt für die nächste Aufgabe und kann auch zur Ergebniskontrolle dienen.</p>
+</div>
+<div id="aufbereitung-des-oecd-datensatzes" class="section level2" number="3.3">
+<h2 number="3.3"><span class="header-section-number">3.3</span> Aufbereitung des OECD Datensatzes</h2>
+<p>Bereitet den gerade heruntergeladenen Datensatz (den ihr ansonsten auch als <code>GovDebtOECD.csv</code> im Ordner <code>data</code> findet) auf indem ihr nur noch die Variablen <code>Country</code>, <code>TIME</code> und <code>Value</code> behaltet und die Daten auf Beobachtungen für Deutschland zwischen 2005 und 2010 beschränkt. Stellt sicher, dass ihr für jede Jahr-Land Kombination tatsächlich nur eine Beobachtung im Datensatz habt.</p>
+</div>
 </div>
 <div id="visualisierung" class="section level1" number="4">
 <h1 number="4"><span class="header-section-number">4</span> Visualisierung</h1>
