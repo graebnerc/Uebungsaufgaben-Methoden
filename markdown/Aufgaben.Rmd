@@ -11,9 +11,14 @@ output:
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(
-  echo = TRUE, fig.align = "center", out.width = '50%', 
+  echo = TRUE, fig.align = "center", out.width = '75%', 
   warning = FALSE, message = FALSE)
 ```
+
+```{r, include=FALSE}
+library(here)
+```
+
 
 # Grundlagen
 
@@ -135,7 +140,33 @@ jede Jahr-Land Kombination tatsächlich nur eine Beobachtung im Datensatz habt.
 
 # Visualisierung
 
-TBA
+## Liniengraph zu privaten Krankenversicherungen in Deutschland
+
+Verwendet für die Aufgabe den Datensatz `PrivateInsuranceGermany.csv`. Dieser
+enthält die Daten darüber, welcher Prozentsatz der Bevölkerung im Zeitraum von
+1995 bis 2019 in Deutschland privatversichert war.
+
+Ziel der Übung ist es, dass ihr am Ende eine vollständige Grafik erstellt habt, 
+in welcher der Prozentsatz der Privatversicherten in einem Liniengraph
+dargestellt wird, die Achsen beschriftet sind und sowohl ein Titel als auch
+die Quellenangabe hinzugefügt werden.
+
+Orientieren könnt ihr euch dabei an folgenden Angaben:
+
+Name y-Achse: `Anteil privatversicherter Personen in %`
+
+Titel: `Entwicklung der Privatversicherungen in Deutschland`
+
+Untertitel: `Zeitraum von 1991 bis 2018`
+
+Caption: `Daten: OECD Statistics`
+
+Am Ende soll die Abbildung ungefähr folgendermaßen aussehen:
+
+```{r, echo=FALSE}
+knitr::include_graphics(here("output/vis_priv_krankenvers.png"))
+```
+
 
 # Formalia
 

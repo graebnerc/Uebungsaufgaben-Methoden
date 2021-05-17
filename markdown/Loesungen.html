@@ -487,7 +487,40 @@ nrow(debt_filtered_unique) - nrow(debt_filtered)</code></pre>
 </div>
 <div id="visualisierung" class="section level1" number="4">
 <h1 number="4"><span class="header-section-number">4</span> Visualisierung</h1>
-<p>TBA</p>
+<pre class="r"><code>require(tidyverse)
+require(data.table)
+require(scales)
+require(here)</code></pre>
+<div id="liniengraph-zu-privaten-krankenversicherungen-in-deutschland" class="section level2" number="4.1">
+<h2 number="4.1"><span class="header-section-number">4.1</span> Liniengraph zu privaten Krankenversicherungen in Deutschland</h2>
+<pre class="r"><code>daten_pfad &lt;- here::here(&quot;data/PrivateInsuranceGermany.csv&quot;)
+
+priv_vers_de &lt;- data.table::fread(
+  daten_pfad, colClasses = c(&quot;double&quot;, &quot;double&quot;, &quot;character&quot;)
+  ) %&gt;%
+  ggplot2::ggplot(
+  data = .,
+  mapping = aes(x = Year, y = PercPop)
+) +
+  ggplot2::geom_line() +
+  ggplot2::scale_x_continuous(name = &quot;Jahr&quot;) + 
+  ggplot2::scale_y_continuous(
+    name = &quot;Anteil Privatversicherungen&quot;, 
+    labels = scales::percent_format(scale = 1, accuracy = 1),
+    limits = c(0, 40)
+    ) +
+  ggplot2::labs(
+    title = &quot;Entwicklung der Privatversicherungen in Deutschland&quot;,
+    subtitle = &quot;Zeitraum von 1991 bis 2018&quot;,
+    caption = &quot;Daten: OECD Statistics&quot;
+  ) +
+  theme_bw() +
+  theme(
+    panel.border = element_blank(),
+    axis.line = element_line(),
+    axis.title.x = element_blank()
+  )</code></pre>
+</div>
 </div>
 <div id="formalia" class="section level1" number="5">
 <h1 number="5"><span class="header-section-number">5</span> Formalia</h1>

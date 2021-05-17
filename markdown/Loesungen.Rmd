@@ -387,7 +387,54 @@ jede Jahr-Land Kombination tatsächlich nur eine Beobachtung im Datensatz habt.
 
 # Visualisierung
 
-TBA
+```{r}
+require(tidyverse)
+require(data.table)
+require(scales)
+require(here)
+```
+
+## Liniengraph zu privaten Krankenversicherungen in Deutschland
+
+```{r}
+daten_pfad <- here::here("data/PrivateInsuranceGermany.csv")
+
+priv_vers_de <- data.table::fread(
+  daten_pfad, colClasses = c("double", "double", "character")
+  ) %>%
+  ggplot2::ggplot(
+  data = .,
+  mapping = aes(x = Year, y = PercPop)
+) +
+  ggplot2::geom_line() +
+  ggplot2::scale_x_continuous(name = "Jahr") + 
+  ggplot2::scale_y_continuous(
+    name = "Anteil Privatversicherungen", 
+    labels = scales::percent_format(scale = 1, accuracy = 1),
+    limits = c(0, 40)
+    ) +
+  ggplot2::labs(
+    title = "Entwicklung der Privatversicherungen in Deutschland",
+    subtitle = "Zeitraum von 1991 bis 2018",
+    caption = "Daten: OECD Statistics"
+  ) +
+  theme_bw() +
+  theme(
+    panel.border = element_blank(),
+    axis.line = element_line(),
+    axis.title.x = element_blank()
+  )
+```
+
+```{r, echo=FALSE}
+ggsave(
+  plot = priv_vers_de, 
+  filename = here("output/vis_priv_krankenvers.png"), 
+  width = 5, height = 3)
+```
+
+
+
 
 # Formalia
 
