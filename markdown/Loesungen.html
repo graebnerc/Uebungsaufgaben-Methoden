@@ -366,7 +366,8 @@ tibble_expl &lt;- tibble::as_tibble(list_expl)</code></pre>
 <pre class="r"><code>require(tidyverse)
 require(here)
 require(data.table)
-require(countrycode)</code></pre>
+require(countrycode)
+require(knitr)</code></pre>
 <p>Einlesen der Daten:</p>
 <pre class="r"><code>daten_pfad &lt;- here::here(&quot;data/BIP_Konsum.csv&quot;)
 
@@ -619,6 +620,71 @@ priv_vers_de &lt;- data.table::fread(
     axis.line = element_line(),
     axis.title.x = element_blank()
   )</code></pre>
+</div>
+<div id="zweil-balkendiagramme" class="section level2" number="4.2">
+<h2 number="4.2"><span class="header-section-number">4.2</span> Zweil Balkendiagramme</h2>
+<pre class="r"><code>require(data.table)
+require(here)
+require(tidyverse)
+require(ggpubr)</code></pre>
+<pre class="r"><code>ameco_swiid_data &lt;- fread(here(&quot;data/ameco_swiid_tidy.csv&quot;))
+
+aws_plot &lt;- ggplot(
+  data = ameco_swiid_data, 
+  mapping = aes(x=Region, y=AWS_mean)
+  ) +
+  geom_bar(
+    stat = &quot;identity&quot;, width = 0.5, color=&quot;#13294b&quot;, fill=&quot;#13294b&quot;
+    ) +
+  geom_errorbar(
+    aes(ymin=AWS_mean-0.5*AWS_sd, ymax=AWS_mean+0.5*AWS_sd), 
+    width = 0.4, color = &quot;grey&quot;
+    ) +
+  labs(title=&quot;Adj. Wage Share&quot;, caption = &quot;Quelle: AMECO&quot;) +
+  scale_y_continuous(
+    name=&quot;Lohnanteil in %&quot;, 
+    expand = expansion(c(0, 0), c(0,5)), 
+    labels = scales::percent_format(accuracy = 1, scale = 1)
+    ) +
+  theme_bw() +
+  coord_flip() +
+  theme(axis.title.y = element_blank(),
+        panel.border = element_blank(),
+        axis.line = element_line(), 
+        axis.ticks.y = element_blank(),
+        panel.grid.major.y = element_blank(), 
+        panel.grid.minor.y = element_blank())
+
+gini_plot &lt;- ggplot(
+  data = ameco_swiid_data, 
+  mapping = aes(x=Region, y=gini_disp_mean)
+  ) +
+  geom_bar(
+    stat = &quot;identity&quot;, width = 0.5, color=&quot;#13294b&quot;, fill=&quot;#13294b&quot;
+    ) +
+  geom_errorbar(
+    aes(ymin=gini_disp_mean-0.5*AWS_sd, ymax=gini_disp_mean+0.5*AWS_sd), 
+    width = 0.4, color = &quot;grey&quot;
+    ) +
+  labs(title=&quot;Gini (post-Steuer)&quot;, caption = &quot;Quelle: SWIID&quot;) +
+  scale_y_continuous(
+    name=&quot;Gini (post-Steuer)&quot;, 
+    expand = expansion(c(0, 0), c(0,5)), 
+    labels = scales::percent_format(accuracy = 1, scale = 1)
+    ) +
+  coord_flip() +
+  theme_bw() +
+  theme(axis.title.y = element_blank(),
+        panel.border = element_blank(),
+        axis.line = element_line(), 
+        axis.ticks.y = element_blank(), 
+        panel.grid.major.y = element_blank(), 
+        panel.grid.minor.y = element_blank())
+
+full_plot &lt;- ggpubr::ggarrange(aws_plot, gini_plot, nrow = 2)</code></pre>
+<pre class="r"><code>ggsave(plot = full_plot, 
+       filename = here(&quot;output/vis_ameco_swiid.png&quot;), 
+       width = 6, height = 4)</code></pre>
 </div>
 </div>
 <div id="formalia" class="section level1" number="5">

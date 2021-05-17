@@ -469,14 +469,14 @@ fwrite(final_data, file = here("data/ameco_swiid_tidy.csv"))
 
 # Visualisierung
 
+## Liniengraph zu privaten Krankenversicherungen in Deutschland
+
 ```{r}
 require(tidyverse)
 require(data.table)
 require(scales)
 require(here)
 ```
-
-## Liniengraph zu privaten Krankenversicherungen in Deutschland
 
 ```{r}
 daten_pfad <- here::here("data/PrivateInsuranceGermany.csv")
@@ -515,6 +515,81 @@ ggsave(
   width = 5, height = 3)
 ```
 
+
+## Zweil Balkendiagramme
+
+```{r}
+require(data.table)
+require(here)
+library(scales)
+require(tidyverse)
+require(ggpubr)
+```
+
+
+```{r}
+ameco_swiid_data <- fread(here("data/ameco_swiid_tidy.csv"))
+
+aws_plot <- ggplot(
+  data = ameco_swiid_data, 
+  mapping = aes(x=Region, y=AWS_mean)
+  ) +
+  geom_bar(
+    stat = "identity", width = 0.5, color="#13294b", fill="#13294b"
+    ) +
+  geom_errorbar(
+    aes(ymin=AWS_mean-0.5*AWS_sd, ymax=AWS_mean+0.5*AWS_sd), 
+    width = 0.4, color = "grey"
+    ) +
+  labs(title="Adj. Wage Share", caption = "Quelle: AMECO") +
+  scale_y_continuous(
+    name="Lohnanteil in %", 
+    expand = expansion(c(0, 0), c(0,5)), 
+    labels = scales::percent_format(accuracy = 1, scale = 1)
+    ) +
+  theme_bw() +
+  coord_flip() +
+  theme(axis.title.y = element_blank(),
+        panel.border = element_blank(),
+        axis.line = element_line(), 
+        axis.ticks.y = element_blank(),
+        panel.grid.major.y = element_blank(), 
+        panel.grid.minor.y = element_blank())
+
+gini_plot <- ggplot(
+  data = ameco_swiid_data, 
+  mapping = aes(x=Region, y=gini_disp_mean)
+  ) +
+  geom_bar(
+    stat = "identity", width = 0.5, color="#13294b", fill="#13294b"
+    ) +
+  geom_errorbar(
+    aes(ymin=gini_disp_mean-0.5*AWS_sd, ymax=gini_disp_mean+0.5*AWS_sd), 
+    width = 0.4, color = "grey"
+    ) +
+  labs(title="Gini (post-Steuer)", caption = "Quelle: SWIID") +
+  scale_y_continuous(
+    name="Gini (post-Steuer)", 
+    expand = expansion(c(0, 0), c(0,5)), 
+    labels = scales::percent_format(accuracy = 1, scale = 1)
+    ) +
+  coord_flip() +
+  theme_bw() +
+  theme(axis.title.y = element_blank(),
+        panel.border = element_blank(),
+        axis.line = element_line(), 
+        axis.ticks.y = element_blank(), 
+        panel.grid.major.y = element_blank(), 
+        panel.grid.minor.y = element_blank())
+
+full_plot <- ggpubr::ggarrange(aws_plot, gini_plot, nrow = 2)
+```
+
+```{r, eval=FALSE}
+ggsave(plot = full_plot, 
+       filename = here("output/vis_ameco_swiid.png"), 
+       width = 6, height = 4)
+```
 
 
 

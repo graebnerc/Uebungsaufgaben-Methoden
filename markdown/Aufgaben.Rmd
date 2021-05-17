@@ -162,8 +162,8 @@ Land 'übersetzen' können.
 Der Datensatz sollte am Ende ungefähr so aussehen:
 
 ```{r, echo=FALSE}
-res_data <- fread(here("data/ameco_swiid_tidy.csv"))
-knitr::kable(res_data)
+ameco_swiid_data <- fread(here("data/ameco_swiid_tidy.csv"))
+knitr::kable(ameco_swiid_data)
 ```
 
 # Visualisierung
@@ -195,6 +195,33 @@ Am Ende soll die Abbildung ungefähr folgendermaßen aussehen:
 knitr::include_graphics(here("output/vis_priv_krankenvers.png"))
 ```
 
+## Zwei Balkendiagramme
+
+Für diese Aufgabe beziehen wir uns direkt auf den Datensatz, den wir in der
+Aufgabe `Lange und breite Datensätze kombinieren` im Abschnitt
+`Datenaufbereitung` erstellt haben.
+Falls ihr die entsprechende Aufgabe nicht gelöst habt, ist das 
+Zwischenergebnis auch unter `data/ameco_swiid_tidy.csv` verfügbar. 
+Es empfiehlt sich aber, beide Aufgaben hintereinander und gemeinsam zu lösen.
+
+Stellen Sie die Mittelwerte und Standardabweichungen in einem 
+Balkendiagramm dar. Die Standardabweichung sollte durch einen
+Whisker dargstellt werden, der sich nach oben und unten vom Mittelwert 
+je um eine halbe Standardabweichung erstreckt.
+
+Die resultierende Abbildung sollte ungefähr so aussehen:
+
+```{r, echo=FALSE}
+knitr::include_graphics(here("output/vis_ameco_swiid.png"))
+```
+
+> *Tipp 1*: Um zwei Plots in einer Abbildung zu kombinieren verwenden Sie
+die Funktion `ggpubr::ggarrange()`. Aber Achtung: im Paket gibt es
+auch eine Funktion `mutate()`, in Kombination mit dem Paket 
+`dplyr` (enthalten im `tidyverse`) ist also Vorsicht geboten!
+
+> *Tipp 2*: Für die Whisker im Balkendiagram können Sie die Funktion
+`ggplot2::geom_errorbar()` verwenden.
 
 # Formalia
 
