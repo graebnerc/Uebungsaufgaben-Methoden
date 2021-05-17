@@ -251,6 +251,8 @@ Verwendete Pakete:
 require(tidyverse)
 require(here)
 require(data.table)
+require(countrycode)
+require(knitr)
 ```
 
 
@@ -384,6 +386,86 @@ als `GovDebtOECD.csv` im Ordner `data` findet) auf indem ihr nur noch die
 Variablen `Country`, `TIME` und `Value` behaltet und die Daten auf Beobachtungen 
 für Deutschland zwischen 2005 und 2010 beschränkt. Stellt sicher, dass ihr für
 jede Jahr-Land Kombination tatsächlich nur eine Beobachtung im Datensatz habt.
+
+## Lange und breite Datensätze kombinieren
+
+Nachdem wir die Daten heruntergeladen und unter 
+`data/raw/AMECO7.txt` und `data/raw/swiid8_0_summary.csv`
+gespeichert haben
+transformieren wir beide Datensätze zunächst in die lange Form (beim SWIID ist 
+die relevante Spalte der `gini_disp`):
+
+```{r}
+ameco_7 <- fread(
+  here("data/raw/AMECO7.txt"), fill = T, header = T,
+  colClasses = c(rep("character", 5), rep("double", 63))
+  ) %>%
+  filter(
+    TITLE==paste("Adjusted wage share: total economy: as percentage of", 
+                 "GDP at current prices (Compensation per employee as", 
+                 "percentage of GDP at market prices per person employed.)")
+    ) %>%
+  select(
+    -any_of(c("V68", "SUB-CHAPTER", "CODE", "TITLE", "UNIT"))
+    ) %>%
+  pivot_longer(
+    names_to = "Jahr", values_to = "AWS", 
+    cols = one_of(as.character(1960:2021))
+    ) %>%
+  mutate(Jahr=as.double(Jahr))
+
+swiid <- fread(
+  here("data/raw/swiid8_0_summary.csv"), 
+  select = c("country"="character", 
+             "year"="double", 
+             "gini_disp"="double"))
+```
+
+Wir verwenden nun die Funktion `inner_join()`, da wir ja keine fehlenden
+Werte haben wollen. 
+Vorher übersetzen wir noch die Ländernamen beider Datensätze in das `iso3c`
+Format:
+
+```{r, warning=FALSE}
+ameco_7 <- ameco_7 %>%
+  mutate(
+    COUNTRY=countrycode(COUNTRY, "country.name", "iso3c")
+    ) %>%
+  filter(!is.na(COUNTRY))
+
+swiid <- swiid %>%
+  mutate(
+    country=countrycode(country, "country.name", "iso3c")
+    ) %>%
+  filter(!is.na(country))
+
+full_data <- inner_join(
+  ameco_7, swiid, 
+  by=c("COUNTRY"="country", "Jahr"="year"))
+```
+
+Nun können wir noch die Kontinente hinzufügen und die gewünschten 
+gruppierten deskriptiven Statistiken berechnen:
+
+```{r}
+final_data <- full_data %>%
+  mutate(
+    Region=countrycode(
+      COUNTRY, origin = "iso3c", destination = "continent")
+    ) %>%
+  group_by(Region) %>%
+  summarise(
+    across(
+      .cols = all_of(c("AWS", "gini_disp")), 
+      .fns =  list(mean = ~mean(.x, na.rm=T), 
+                   sd = ~sd(.x, na.rm=T)), 
+      .groups = "drop")) 
+knitr::kable(final_data)
+```
+
+```{r, echo=FALSE, eval=FALSE}
+fwrite(final_data, file = here("data/ameco_swiid_tidy.csv"))
+```
 
 # Visualisierung
 

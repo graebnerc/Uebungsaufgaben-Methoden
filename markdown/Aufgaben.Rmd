@@ -17,6 +17,8 @@ knitr::opts_chunk$set(
 
 ```{r, include=FALSE}
 library(here)
+library(data.table)
+library(knitr)
 ```
 
 
@@ -137,6 +139,32 @@ als `GovDebtOECD.csv` im Ordner `data` findet) auf indem ihr nur noch die
 Variablen `Country`, `TIME` und `Value` behaltet und die Daten auf Beobachtungen 
 für Deutschland zwischen 2005 und 2010 beschränkt. Stellt sicher, dass ihr für
 jede Jahr-Land Kombination tatsächlich nur eine Beobachtung im Datensatz habt.
+
+## Lange und breite Datensätze kombinieren
+
+Laden Sie sich Daten zum "adjusted wage share" von der [AMECO Datenbank](https://ec.europa.eu/info/business-economy-euro/indicators-statistics/economic-databases/macro-economic-database-ameco/ameco-database_en)
+(`Gross Domestic Product (Income Approach), Labour Costs`)
+und Daten zu Einkommensungleichheit (gemessen durch den Post-Steuer-Gini Index) 
+von der *Standardized World Income Inequality Database* 
+([SWIID](https://fsolt.org/swiid/)) herunter.
+Bei der SWIID brauchen Sie nur den 'Summary' Datensatz.
+Kombinieren Sie die Datensätze und transformieren Sie sie in 
+eine aufgeräumte Form sodass er den Anforderungen an 'tidy data' entspricht und
+dass es keine fehlenden Werte gibt.
+
+Fasen Sie danach die Daten zusammen indem Sie Durchschnitte und 
+Standardabweichungen für die jeweiligen Kontinente berechnen. 
+
+> **Tipp:** Um die Kontinente zu den Ländern herauszufinden können Sie das Paket
+`countrycode` verwenden. Es kennt einen 'Code' `continent` in den Sie jedes 
+Land 'übersetzen' können.
+
+Der Datensatz sollte am Ende ungefähr so aussehen:
+
+```{r, echo=FALSE}
+res_data <- fread(here("data/ameco_swiid_tidy.csv"))
+knitr::kable(res_data)
+```
 
 # Visualisierung
 

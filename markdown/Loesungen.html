@@ -365,7 +365,8 @@ tibble_expl &lt;- tibble::as_tibble(list_expl)</code></pre>
 <p>Verwendete Pakete:</p>
 <pre class="r"><code>require(tidyverse)
 require(here)
-require(data.table)</code></pre>
+require(data.table)
+require(countrycode)</code></pre>
 <p>Einlesen der Daten:</p>
 <pre class="r"><code>daten_pfad &lt;- here::here(&quot;data/BIP_Konsum.csv&quot;)
 
@@ -483,6 +484,104 @@ nrow(debt_filtered_unique) - nrow(debt_filtered)</code></pre>
 <pre><code>## [1] 0</code></pre>
 <p>Da beide Datensätze die gleiche Anzahl an Zeilen haben, gibt es keine Duplikate. Es gibt verschiedene (und je nach Anwendung effizientere) Methoden um Duplikatore zu finden, aber für die meisten Fälle ist <code>dplyr::distinct()</code> ausreichend.</p>
 <p>Bereitet den gerade heruntergeladenen Datensatz (den ihr ansonsten auch als <code>GovDebtOECD.csv</code> im Ordner <code>data</code> findet) auf indem ihr nur noch die Variablen <code>Country</code>, <code>TIME</code> und <code>Value</code> behaltet und die Daten auf Beobachtungen für Deutschland zwischen 2005 und 2010 beschränkt. Stellt sicher, dass ihr für jede Jahr-Land Kombination tatsächlich nur eine Beobachtung im Datensatz habt.</p>
+</div>
+<div id="lange-und-breite-datensätze-kombinieren" class="section level2" number="3.4">
+<h2 number="3.4"><span class="header-section-number">3.4</span> Lange und breite Datensätze kombinieren</h2>
+<p>Nachdem wir die Daten heruntergeladen und unter <code>data/raw/AMECO7.txt</code> und <code>data/raw/swiid8_0_summary.csv</code> gespeichert haben transformieren wir beide Datensätze zunächst in die lange Form (beim SWIID ist die relevante Spalte der <code>gini_disp</code>):</p>
+<pre class="r"><code>ameco_7 &lt;- fread(
+  here(&quot;data/raw/AMECO7.txt&quot;), fill = T, header = T,
+  colClasses = c(rep(&quot;character&quot;, 5), rep(&quot;double&quot;, 63))
+  ) %&gt;%
+  filter(
+    TITLE==paste(&quot;Adjusted wage share: total economy: as percentage of&quot;, 
+                 &quot;GDP at current prices (Compensation per employee as&quot;, 
+                 &quot;percentage of GDP at market prices per person employed.)&quot;)
+    ) %&gt;%
+  select(
+    -any_of(c(&quot;V68&quot;, &quot;SUB-CHAPTER&quot;, &quot;CODE&quot;, &quot;TITLE&quot;, &quot;UNIT&quot;))
+    ) %&gt;%
+  pivot_longer(
+    names_to = &quot;Jahr&quot;, values_to = &quot;AWS&quot;, 
+    cols = one_of(as.character(1960:2021))
+    ) %&gt;%
+  mutate(Jahr=as.double(Jahr))
+
+swiid &lt;- fread(
+  here(&quot;data/raw/swiid8_0_summary.csv&quot;), 
+  select = c(&quot;country&quot;=&quot;character&quot;, 
+             &quot;year&quot;=&quot;double&quot;, 
+             &quot;gini_disp&quot;=&quot;double&quot;))</code></pre>
+<p>Wir verwenden nun die Funktion <code>inner_join()</code>, da wir ja keine fehlenden Werte haben wollen. Vorher übersetzen wir noch die Ländernamen beider Datensätze in das <code>iso3c</code> Format:</p>
+<pre class="r"><code>ameco_7 &lt;- ameco_7 %&gt;%
+  mutate(
+    COUNTRY=countrycode(COUNTRY, &quot;country.name&quot;, &quot;iso3c&quot;)
+    ) %&gt;%
+  filter(!is.na(COUNTRY))
+
+swiid &lt;- swiid %&gt;%
+  mutate(
+    country=countrycode(country, &quot;country.name&quot;, &quot;iso3c&quot;)
+    ) %&gt;%
+  filter(!is.na(country))
+
+full_data &lt;- inner_join(
+  ameco_7, swiid, 
+  by=c(&quot;COUNTRY&quot;=&quot;country&quot;, &quot;Jahr&quot;=&quot;year&quot;))</code></pre>
+<p>Nun können wir noch die Kontinente hinzufügen und die gewünschten gruppierten deskriptiven Statistiken berechnen:</p>
+<pre class="r"><code>final_data &lt;- full_data %&gt;%
+  mutate(
+    Region=countrycode(
+      COUNTRY, origin = &quot;iso3c&quot;, destination = &quot;continent&quot;)
+    ) %&gt;%
+  group_by(Region) %&gt;%
+  summarise(
+    across(
+      .cols = all_of(c(&quot;AWS&quot;, &quot;gini_disp&quot;)), 
+      .fns =  list(mean = ~mean(.x, na.rm=T), 
+                   sd = ~sd(.x, na.rm=T)), 
+      .groups = &quot;drop&quot;)) 
+knitr::kable(final_data)</code></pre>
+<table>
+<thead>
+<tr class="header">
+<th align="left">Region</th>
+<th align="right">AWS_mean</th>
+<th align="right">AWS_sd</th>
+<th align="right">gini_disp_mean</th>
+<th align="right">gini_disp_sd</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">Americas</td>
+<td align="right">55.44769</td>
+<td align="right">8.090756</td>
+<td align="right">37.68408</td>
+<td align="right">8.122685</td>
+</tr>
+<tr class="even">
+<td align="left">Asia</td>
+<td align="right">62.62486</td>
+<td align="right">11.093583</td>
+<td align="right">31.12471</td>
+<td align="right">5.523268</td>
+</tr>
+<tr class="odd">
+<td align="left">Europe</td>
+<td align="right">56.29696</td>
+<td align="right">6.704024</td>
+<td align="right">28.24853</td>
+<td align="right">3.895128</td>
+</tr>
+<tr class="even">
+<td align="left">Oceania</td>
+<td align="right">55.54349</td>
+<td align="right">4.810261</td>
+<td align="right">30.40349</td>
+<td align="right">2.435012</td>
+</tr>
+</tbody>
+</table>
 </div>
 </div>
 <div id="visualisierung" class="section level1" number="4">

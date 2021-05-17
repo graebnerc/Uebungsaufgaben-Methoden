@@ -268,6 +268,56 @@ g &amp;= f^3
 <h2 number="3.3"><span class="header-section-number">3.3</span> Aufbereitung des OECD Datensatzes</h2>
 <p>Bereitet den gerade heruntergeladenen Datensatz (den ihr ansonsten auch als <code>GovDebtOECD.csv</code> im Ordner <code>data</code> findet) auf indem ihr nur noch die Variablen <code>Country</code>, <code>TIME</code> und <code>Value</code> behaltet und die Daten auf Beobachtungen für Deutschland zwischen 2005 und 2010 beschränkt. Stellt sicher, dass ihr für jede Jahr-Land Kombination tatsächlich nur eine Beobachtung im Datensatz habt.</p>
 </div>
+<div id="lange-und-breite-datensätze-kombinieren" class="section level2" number="3.4">
+<h2 number="3.4"><span class="header-section-number">3.4</span> Lange und breite Datensätze kombinieren</h2>
+<p>Laden Sie sich Daten zum “adjusted wage share” von der <a href="https://ec.europa.eu/info/business-economy-euro/indicators-statistics/economic-databases/macro-economic-database-ameco/ameco-database_en">AMECO Datenbank</a> (<code>Gross Domestic Product (Income Approach), Labour Costs</code>) und Daten zu Einkommensungleichheit (gemessen durch den Post-Steuer-Gini Index) von der <em>Standardized World Income Inequality Database</em> (<a href="https://fsolt.org/swiid/">SWIID</a>) herunter. Bei der SWIID brauchen Sie nur den ‘Summary’ Datensatz. Kombinieren Sie die Datensätze und transformieren Sie sie in eine aufgeräumte Form sodass er den Anforderungen an ‘tidy data’ entspricht und dass es keine fehlenden Werte gibt.</p>
+<p>Fasen Sie danach die Daten zusammen indem Sie Durchschnitte und Standardabweichungen für die jeweiligen Kontinente berechnen.</p>
+<blockquote>
+<p><strong>Tipp:</strong> Um die Kontinente zu den Ländern herauszufinden können Sie das Paket <code>countrycode</code> verwenden. Es kennt einen ‘Code’ <code>continent</code> in den Sie jedes Land ‘übersetzen’ können.</p>
+</blockquote>
+<p>Der Datensatz sollte am Ende ungefähr so aussehen:</p>
+<table>
+<thead>
+<tr class="header">
+<th align="left">Region</th>
+<th align="right">AWS_mean</th>
+<th align="right">AWS_sd</th>
+<th align="right">gini_disp_mean</th>
+<th align="right">gini_disp_sd</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">Americas</td>
+<td align="right">55.44769</td>
+<td align="right">8.090756</td>
+<td align="right">37.68408</td>
+<td align="right">8.122685</td>
+</tr>
+<tr class="even">
+<td align="left">Asia</td>
+<td align="right">62.62486</td>
+<td align="right">11.093583</td>
+<td align="right">31.12471</td>
+<td align="right">5.523268</td>
+</tr>
+<tr class="odd">
+<td align="left">Europe</td>
+<td align="right">56.29696</td>
+<td align="right">6.704024</td>
+<td align="right">28.24853</td>
+<td align="right">3.895128</td>
+</tr>
+<tr class="even">
+<td align="left">Oceania</td>
+<td align="right">55.54349</td>
+<td align="right">4.810261</td>
+<td align="right">30.40349</td>
+<td align="right">2.435012</td>
+</tr>
+</tbody>
+</table>
+</div>
 </div>
 <div id="visualisierung" class="section level1" number="4">
 <h1 number="4"><span class="header-section-number">4</span> Visualisierung</h1>
