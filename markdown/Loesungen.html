@@ -587,12 +587,12 @@ knitr::kable(final_data)</code></pre>
 </div>
 <div id="visualisierung" class="section level1" number="4">
 <h1 number="4"><span class="header-section-number">4</span> Visualisierung</h1>
+<div id="liniengraph-zu-privaten-krankenversicherungen-in-deutschland" class="section level2" number="4.1">
+<h2 number="4.1"><span class="header-section-number">4.1</span> Liniengraph zu privaten Krankenversicherungen in Deutschland</h2>
 <pre class="r"><code>require(tidyverse)
 require(data.table)
 require(scales)
 require(here)</code></pre>
-<div id="liniengraph-zu-privaten-krankenversicherungen-in-deutschland" class="section level2" number="4.1">
-<h2 number="4.1"><span class="header-section-number">4.1</span> Liniengraph zu privaten Krankenversicherungen in Deutschland</h2>
 <pre class="r"><code>daten_pfad &lt;- here::here(&quot;data/PrivateInsuranceGermany.csv&quot;)
 
 priv_vers_de &lt;- data.table::fread(
@@ -621,10 +621,54 @@ priv_vers_de &lt;- data.table::fread(
     axis.title.x = element_blank()
   )</code></pre>
 </div>
-<div id="zweil-balkendiagramme" class="section level2" number="4.2">
-<h2 number="4.2"><span class="header-section-number">4.2</span> Zweil Balkendiagramme</h2>
+<div id="ein-balkendiagramm" class="section level2" number="4.2">
+<h2 number="4.2"><span class="header-section-number">4.2</span> Ein Balkendiagramm</h2>
+<pre class="r"><code>require(tidyverse)</code></pre>
+<pre class="r"><code>werte &lt;- tibble::tibble(
+  Gruppe = c(
+    &quot;Finish no school&quot;, 
+    &quot;Finish 1 year&quot;, 
+    &quot;Finish 3 years&quot;,
+    &quot;Graduate, 2.0 GPA&quot;,
+    &quot;Graduate, 3.0 GPA&quot;,
+    &quot;Graduate, 3.75 GPA&quot;),
+  Einkommen = c(
+    480, 510, 620,
+    800, 920, 1050
+  ))
+
+schwabisch_plot &lt;- ggplot(
+  data = werte, 
+  mapping = aes(x=reorder(Gruppe, -Einkommen), y=Einkommen)
+  ) +
+  geom_bar(
+    stat = &quot;identity&quot;, width = 0.5, color=&quot;#13294b&quot;, fill=&quot;#13294b&quot;
+    ) + 
+  scale_y_continuous(
+    breaks = seq(0, 1200, 200), expand = expansion()
+    ) +
+  coord_flip() +
+  labs(
+    title = &quot;Discounted Expected Lifetime Earnings, VN(t&#39;)&quot;, 
+    subtitle = &quot;(Income in thousands)&quot;, 
+    caption = paste(
+      &quot;Author&#39;s calculations using numbers inferred from text&quot;,
+      &quot;in Stinebrickner and Stinebrickner (2013).&quot;)
+    ) +
+  theme_bw() +
+  theme(panel.border = element_blank(), 
+        axis.ticks = element_blank(), 
+        axis.title = element_blank(), 
+        axis.line = element_line(),
+        panel.grid = element_blank(),
+        plot.title = element_text(face = &quot;bold&quot;),
+        panel.grid.major.x = element_line(colour = &quot;grey&quot;))</code></pre>
+</div>
+<div id="zweil-balkendiagramme" class="section level2" number="4.3">
+<h2 number="4.3"><span class="header-section-number">4.3</span> Zweil Balkendiagramme</h2>
 <pre class="r"><code>require(data.table)
 require(here)
+library(scales)
 require(tidyverse)
 require(ggpubr)</code></pre>
 <pre class="r"><code>ameco_swiid_data &lt;- fread(here(&quot;data/ameco_swiid_tidy.csv&quot;))

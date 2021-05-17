@@ -195,6 +195,38 @@ Am Ende soll die Abbildung ungefähr folgendermaßen aussehen:
 knitr::include_graphics(here("output/vis_priv_krankenvers.png"))
 ```
 
+## Ein Balkendiagramm
+
+Eine sehr schöne Diskussion verschiedener Visualisierungsmöglichkeiten 
+bietet das Paper 'An Economist’s Guide to Visualizing Data' von 
+Jonathan Schwabish (siehe
+[hier](https://pubs.aeaweb.org/doi/pdfplus/10.1257/jep.28.1.209)
+).
+Auf S. 216 findet sich folgende Abbildung:
+
+```{r, echo=FALSE}
+knitr::include_graphics(here("output/vis_schwabisch_expl.png"))
+```
+
+Replizieren Sie diese so gut wie möglich und verwenden Sie dabei
+folgende manuell erstellten Daten:
+
+```{r}
+werte <- tibble::tibble(
+  Gruppe = c(
+    "Finish no school", 
+    "Finish 1 year", 
+    "Finish 3 years",
+    "Graduate, 2.0 GPA",
+    "Graduate, 3.0 GPA",
+    "Graduate, 3.75 GPA"),
+  Einkommen = c(
+    480, 510, 620,
+    800, 920, 1050
+  ))
+```
+
+
 ## Zwei Balkendiagramme
 
 Für diese Aufgabe beziehen wir uns direkt auf den Datensatz, den wir in der
